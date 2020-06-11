@@ -1,0 +1,338 @@
+-- phpMyAdmin SQL Dump
+-- version 4.9.2
+-- https://www.phpmyadmin.net/
+--
+-- Host: 127.0.0.1:3306
+-- Gegenereerd op: 11 jun 2020 om 11:10
+-- Serverversie: 5.7.28
+-- PHP-versie: 7.3.12
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Database: `karten`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Tabelstructuur voor tabel `cursus`
+--
+
+DROP TABLE IF EXISTS `cursus`;
+CREATE TABLE IF NOT EXISTS `cursus` (
+  `Cursusid` int(11) NOT NULL AUTO_INCREMENT,
+  `Cursusomschrijving` varchar(45) NOT NULL,
+  `Begindatum` datetime NOT NULL,
+  `Einddatum` datetime NOT NULL,
+  `Beschikbaar` tinyint(7) NOT NULL,
+  `Prijs` varchar(45) NOT NULL,
+  PRIMARY KEY (`Cursusid`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+
+--
+-- Gegevens worden geëxporteerd voor tabel `cursus`
+--
+
+INSERT INTO `cursus` (`Cursusid`, `Cursusomschrijving`, `Begindatum`, `Einddatum`, `Beschikbaar`, `Prijs`) VALUES
+(1, 'Beginnerscursus', '2023-06-01 00:00:00', '2020-06-05 00:00:00', 0, '250,00'),
+(2, 'Gevorderden', '2020-06-01 00:00:00', '2020-06-19 00:00:00', 0, '300,00'),
+(3, 'Acursus', '2020-06-12 00:00:00', '2020-06-23 00:00:00', 0, '400,00');
+
+-- --------------------------------------------------------
+
+--
+-- Tabelstructuur voor tabel `cursusplanning`
+--
+
+DROP TABLE IF EXISTS `cursusplanning`;
+CREATE TABLE IF NOT EXISTS `cursusplanning` (
+  `Cursusid` int(11) NOT NULL,
+  `Planningid` int(11) NOT NULL,
+  PRIMARY KEY (`Cursusid`,`Planningid`),
+  KEY `fk_cursusplanning_planning1_idx` (`Planningid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+--
+-- Gegevens worden geëxporteerd voor tabel `cursusplanning`
+--
+
+INSERT INTO `cursusplanning` (`Cursusid`, `Planningid`) VALUES
+(1, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Tabelstructuur voor tabel `factuur`
+--
+
+DROP TABLE IF EXISTS `factuur`;
+CREATE TABLE IF NOT EXISTS `factuur` (
+  `Factuurid` int(11) NOT NULL AUTO_INCREMENT,
+  `klantCursistid` int(11) DEFAULT NULL,
+  `Personeelid` int(11) DEFAULT NULL,
+  `Cursusid` int(11) DEFAULT NULL,
+  PRIMARY KEY (`Factuurid`),
+  KEY `fk_Factuur_Klantcursist1_idx` (`klantCursistid`),
+  KEY `fk_Factuur_Personeel1_idx` (`Personeelid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Tabelstructuur voor tabel `factuurcursus`
+--
+
+DROP TABLE IF EXISTS `factuurcursus`;
+CREATE TABLE IF NOT EXISTS `factuurcursus` (
+  `Factuurid` int(11) NOT NULL,
+  `Cursusid` int(11) NOT NULL,
+  PRIMARY KEY (`Factuurid`,`Cursusid`),
+  KEY `fk_factuurcursus_Cursus1_idx` (`Cursusid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Tabelstructuur voor tabel `kart`
+--
+
+DROP TABLE IF EXISTS `kart`;
+CREATE TABLE IF NOT EXISTS `kart` (
+  `Kartid` int(11) NOT NULL AUTO_INCREMENT,
+  `merk` varchar(45) NOT NULL,
+  `type` varchar(45) NOT NULL,
+  `status` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`Kartid`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+
+--
+-- Gegevens worden geëxporteerd voor tabel `kart`
+--
+
+INSERT INTO `kart` (`Kartid`, `merk`, `type`, `status`) VALUES
+(1, 'MF Racing', 'FS2', 'In reparatie'),
+(2, 'Ninebot', '500R', 'Ready to race'),
+(3, 'broek', 'tafel', 'mezelf');
+
+-- --------------------------------------------------------
+
+--
+-- Tabelstructuur voor tabel `kartcursus`
+--
+
+DROP TABLE IF EXISTS `kartcursus`;
+CREATE TABLE IF NOT EXISTS `kartcursus` (
+  `Cursusid` int(11) NOT NULL,
+  `Kartid` int(11) NOT NULL,
+  PRIMARY KEY (`Cursusid`,`Kartid`),
+  KEY `fk_Kartcursus_karten1_idx` (`Kartid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Gegevens worden geëxporteerd voor tabel `kartcursus`
+--
+
+INSERT INTO `kartcursus` (`Cursusid`, `Kartid`) VALUES
+(1, 1),
+(2, 2),
+(3, 3);
+
+-- --------------------------------------------------------
+
+--
+-- Tabelstructuur voor tabel `klantcursist`
+--
+
+DROP TABLE IF EXISTS `klantcursist`;
+CREATE TABLE IF NOT EXISTS `klantcursist` (
+  `klantCursistid` int(11) NOT NULL AUTO_INCREMENT,
+  `Voornaam` varchar(45) NOT NULL,
+  `Tussenvoegsel` varchar(45) DEFAULT NULL,
+  `Achternaam` varchar(45) NOT NULL,
+  `Email` varchar(45) NOT NULL,
+  `Woonplaats` varchar(45) NOT NULL,
+  `Telefoon` varchar(100) NOT NULL,
+  `Adres` varchar(45) NOT NULL,
+  `Wachtwoord` varchar(255) NOT NULL,
+  `Geboortedatum` date NOT NULL,
+  PRIMARY KEY (`klantCursistid`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+
+--
+-- Gegevens worden geëxporteerd voor tabel `klantcursist`
+--
+
+INSERT INTO `klantcursist` (`klantCursistid`, `Voornaam`, `Tussenvoegsel`, `Achternaam`, `Email`, `Woonplaats`, `Telefoon`, `Adres`, `Wachtwoord`, `Geboortedatum`) VALUES
+(1, 'Bas', NULL, 'Schaap', 'basvlieg@gmail.com', 'Almere', '066776767', 'salsastraat', '1234', '1994-07-31'),
+(2, 'Hans', NULL, 'Klepper', 'Hans@gmail.com', 'Amsterdam', '05656566576', 'Almerestraat 62', '1234', '1994-07-06'),
+(3, 'Klaas ', NULL, 'Wonderschoon', 'wonder@gmail.com', 'Amsterdam', '064928838', 'Rozenplein 3', '1234', '1990-03-03');
+
+-- --------------------------------------------------------
+
+--
+-- Tabelstructuur voor tabel `klantcursus`
+--
+
+DROP TABLE IF EXISTS `klantcursus`;
+CREATE TABLE IF NOT EXISTS `klantcursus` (
+  `klantCursisid` int(11) NOT NULL,
+  `Cursusid` int(11) NOT NULL,
+  `aantal` int(11) DEFAULT NULL,
+  PRIMARY KEY (`klantCursisid`,`Cursusid`),
+  KEY `fk_Klantcursus_Cursus1_idx` (`Cursusid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Gegevens worden geëxporteerd voor tabel `klantcursus`
+--
+
+INSERT INTO `klantcursus` (`klantCursisid`, `Cursusid`, `aantal`) VALUES
+(1, 1, 1),
+(2, 2, 1),
+(3, 3, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Tabelstructuur voor tabel `personeel`
+--
+
+DROP TABLE IF EXISTS `personeel`;
+CREATE TABLE IF NOT EXISTS `personeel` (
+  `Personeelid` int(11) NOT NULL,
+  `Voornaam` varchar(45) NOT NULL,
+  `Achternaam` varchar(100) NOT NULL,
+  `Postcode` varchar(45) NOT NULL,
+  `Woonplaats` varchar(45) NOT NULL,
+  `Adres` varchar(45) NOT NULL,
+  `Telefoon` varchar(45) NOT NULL,
+  `Email` varchar(45) NOT NULL,
+  `Wachtwoord` varchar(255) NOT NULL,
+  `Geboortedatum` date NOT NULL,
+  PRIMARY KEY (`Personeelid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Gegevens worden geëxporteerd voor tabel `personeel`
+--
+
+INSERT INTO `personeel` (`Personeelid`, `Voornaam`, `Achternaam`, `Postcode`, `Woonplaats`, `Adres`, `Telefoon`, `Email`, `Wachtwoord`, `Geboortedatum`) VALUES
+(1, 'Xavier', 'Landveld', '1326', 'Almere', 'Almerestraat 62', '063223443', 'xavier_oceni_15@live.nl', '1234', '1994-07-31');
+
+-- --------------------------------------------------------
+
+--
+-- Tabelstructuur voor tabel `personeelrol`
+--
+
+DROP TABLE IF EXISTS `personeelrol`;
+CREATE TABLE IF NOT EXISTS `personeelrol` (
+  `Personeelid` int(11) NOT NULL,
+  `Rolid` int(11) NOT NULL,
+  PRIMARY KEY (`Personeelid`,`Rolid`),
+  KEY `fk_Personeelrol_Rollen1_idx` (`Rolid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Gegevens worden geëxporteerd voor tabel `personeelrol`
+--
+
+INSERT INTO `personeelrol` (`Personeelid`, `Rolid`) VALUES
+(1, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Tabelstructuur voor tabel `planning`
+--
+
+DROP TABLE IF EXISTS `planning`;
+CREATE TABLE IF NOT EXISTS `planning` (
+  `Planningid` int(11) NOT NULL AUTO_INCREMENT,
+  `Planbegindatum` datetime NOT NULL,
+  `Planeinddatum` datetime NOT NULL,
+  PRIMARY KEY (`Planningid`)
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+--
+-- Gegevens worden geëxporteerd voor tabel `planning`
+--
+
+INSERT INTO `planning` (`Planningid`, `Planbegindatum`, `Planeinddatum`) VALUES
+(1, '2020-06-06 06:00:00', '2020-06-20 06:00:00');
+
+-- --------------------------------------------------------
+
+--
+-- Tabelstructuur voor tabel `rollen`
+--
+
+DROP TABLE IF EXISTS `rollen`;
+CREATE TABLE IF NOT EXISTS `rollen` (
+  `Rolid` int(11) NOT NULL,
+  `Rolnaam` varchar(45) NOT NULL,
+  PRIMARY KEY (`Rolid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Gegevens worden geëxporteerd voor tabel `rollen`
+--
+
+INSERT INTO `rollen` (`Rolid`, `Rolnaam`) VALUES
+(1, 'Admin'),
+(2, 'Personeel'),
+(3, 'Klant');
+
+--
+-- Beperkingen voor geëxporteerde tabellen
+--
+
+--
+-- Beperkingen voor tabel `factuur`
+--
+ALTER TABLE `factuur`
+  ADD CONSTRAINT `fk_Factuur_Klantcursist1` FOREIGN KEY (`klantCursistid`) REFERENCES `klantcursist` (`klantCursistid`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `fk_Factuur_Personeel1` FOREIGN KEY (`Personeelid`) REFERENCES `personeel` (`Personeelid`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Beperkingen voor tabel `factuurcursus`
+--
+ALTER TABLE `factuurcursus`
+  ADD CONSTRAINT `fk_factuurcursus_Cursus1` FOREIGN KEY (`Cursusid`) REFERENCES `cursus` (`Cursusid`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `fk_factuurcursus_Factuur1` FOREIGN KEY (`Factuurid`) REFERENCES `factuur` (`Factuurid`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Beperkingen voor tabel `kartcursus`
+--
+ALTER TABLE `kartcursus`
+  ADD CONSTRAINT `fk_Kartcursus_cursus1` FOREIGN KEY (`Cursusid`) REFERENCES `cursus` (`Cursusid`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `fk_Kartcursus_karten1` FOREIGN KEY (`Kartid`) REFERENCES `kart` (`Kartid`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Beperkingen voor tabel `klantcursus`
+--
+ALTER TABLE `klantcursus`
+  ADD CONSTRAINT `fk_Klantcursus_Cursus1` FOREIGN KEY (`Cursusid`) REFERENCES `cursus` (`Cursusid`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `fk_Klantcursus_Klantcursist` FOREIGN KEY (`klantCursisid`) REFERENCES `klantcursist` (`klantCursistid`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Beperkingen voor tabel `personeelrol`
+--
+ALTER TABLE `personeelrol`
+  ADD CONSTRAINT `fk_Personeelrol_Personeel1` FOREIGN KEY (`Personeelid`) REFERENCES `personeel` (`Personeelid`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `fk_Personeelrol_Rollen1` FOREIGN KEY (`Rolid`) REFERENCES `rollen` (`Rolid`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
